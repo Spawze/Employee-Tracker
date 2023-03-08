@@ -120,7 +120,7 @@ function mainMenu() {
                     dbPull('SELECT * FROM roles')
                     break;
                 case "View all employees":
-                    dbPull('SELECT * FROM employees INNER JOIN roles ON employees.role_id = roles.id')
+                    dbPull('SELECT employees.id, employees.first_name, employees.last_name, roles.role_name, roles.salary, roles.department_id, employees.manager_id FROM employees LEFT JOIN roles ON employees.role_id = roles.id ORDER BY employees.id')
                     break;
                 case "Add a department":
                     addDepartment()
@@ -144,7 +144,10 @@ function dbPull(sql) {
         if(err){
             console.log(err)
         }else{
-            console.table(result)
+            if(result[0].id == null){
+                console.log("This table is currently empty!")
+            }else{console.table(result)}
+            
         }
         mainMenu()
     })
