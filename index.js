@@ -10,6 +10,7 @@ const db = mysql.createConnection({
 },
     console.log("Connected to company_db."))
 
+//All questions for each menu
 const menu = {
     type: "list",
     message: "Please make a choice",
@@ -78,7 +79,6 @@ const addEmployeeQuestions = [{
         return 'Please enter a valid id'
     }
 }]
-
 const updateEmployeeQuestions = [
     {
         type:'prompt',
@@ -104,6 +104,7 @@ const updateEmployeeQuestions = [
     },
 ]
 
+//initialize program
 function init() {
     mainMenu()
 }
@@ -119,7 +120,7 @@ function mainMenu() {
                     dbPull('SELECT * FROM roles')
                     break;
                 case "View all employees":
-                    dbPull('SELECT * FROM employees LEFT JOIN roles ON employees.role_id = roles.id')
+                    dbPull('SELECT * FROM employees INNER JOIN roles ON employees.role_id = roles.id')
                     break;
                 case "Add a department":
                     addDepartment()
@@ -136,6 +137,8 @@ function mainMenu() {
             }
         })
 }
+
+//simple function for a sql command without any ?'s
 function dbPull(sql) {
     db.query(sql, (err, result) => {
         if(err){
@@ -147,6 +150,7 @@ function dbPull(sql) {
     })
 }
 
+//functions for adding things
 function addDepartment(){
     inquirer.prompt(addDepartmentQuestions).then((answer)=>{
         db.query("INSERT INTO departments (dep_name) VALUES (?)", answer.name,(err,result)=>{
@@ -184,6 +188,7 @@ function addEmployee(){
         })
     })
 }
+//function for updating employees
 function updateEmployee(){
     inquirer.prompt(updateEmployeeQuestions).then((answer)=>{
         db.query("UPDATE employees SET role_id = ? WHERE id = ?", [answer.role_id, answer.employee_id], (err,result)=>{
@@ -196,4 +201,6 @@ function updateEmployee(){
         })
     })
 }
+
+//initialize program
 init()
